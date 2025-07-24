@@ -8,24 +8,40 @@ Build a scalable multi-cloud analytics solution that enables seamless querying o
 
 ## Architecture Overview
 
-graph LR
-    subgraph Google Cloud
+flowchart TD
+    subgraph Storage
         GCS[Google Cloud Storage (GCS)]
-        BQ[BigQuery]
-        BL[BigLake External Tables]
-        DP[Dataplex]
-    end
-
-    subgraph Azure Cloud
         AZBlob[Azure Blob Storage]
-        AzureAD[Azure Active Directory]
     end
 
-    GCS --> BL
-    AZBlob --> BL
-    BL --> BQ
-    BQ --> DP
-    AzureAD -- Federated Identity --> BQ
+    subgraph ExternalTableLayer
+        BigLake[BigLake External Tables]
+    end
+
+    subgraph Federation
+        BQOmni[BigQuery Omni]
+        FederatedID[Federated Identity<br/>Google Cloud ↔ Azure AD]
+    end
+
+    subgraph Governance
+        Dataplex[Dataplex<br/>Data Governance & Metadata]
+    end
+
+    subgraph Analytics
+        BigQuery[BigQuery SQL Queries]
+    end
+
+    GCS --> BigLake
+    AZBlob --> BigLake
+
+    BigLake --> BQOmni
+    BQOmni --> FederatedID
+
+    BigLake --> Dataplex
+    Dataplex --> BigQuery
+
+    BQOmni --> BigQuery
+
 
 ---
 
@@ -36,6 +52,7 @@ BigLake exposes external tables on top of these cloud storage files.
 BigQuery Omni enables cross-cloud querying with a federated identity connection to Azure.
 
 Dataplex manages metadata, data zones, and governance policies across clouds.
+
 ---
 
 ## Key Steps
@@ -62,6 +79,7 @@ Region Alignment: Ensured BigQuery datasets are in the same region as the BigQue
 Permissions: Assigned correct Azure Blob Storage roles to the Google service account.
 
 Governance: Leveraged Dataplex for consistent metadata and policy management.
+
 ---
 
 ---
@@ -73,9 +91,10 @@ Reduced storage and compute costs by querying external tables.
 Centralized data governance and metadata management.
 
 Scalable architecture supporting hybrid and multi-cloud strategies.
+
 ---
 ---
-How to Run
+## How to Run
 Upload data to GCS and Azure Blob Storage.
 
 Create a BigQuery dataset in region azure-eastus2.
