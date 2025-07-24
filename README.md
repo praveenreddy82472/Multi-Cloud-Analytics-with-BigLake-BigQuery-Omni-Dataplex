@@ -8,39 +8,19 @@ Build a scalable multi-cloud analytics solution that enables seamless querying o
 
 ## Architecture Overview
 
-flowchart TD
-    subgraph Storage
-        GCS[Google Cloud Storage (GCS)]
-        AZBlob[Azure Blob Storage]
-    end
-
-    subgraph ExternalTableLayer
-        BigLake[BigLake External Tables]
-    end
-
-    subgraph Federation
-        BQOmni[BigQuery Omni]
-        FederatedID[Federated Identity<br/>Google Cloud ↔ Azure AD]
-    end
-
-    subgraph Governance
-        Dataplex[Dataplex<br/>Data Governance & Metadata]
-    end
-
-    subgraph Analytics
-        BigQuery[BigQuery SQL Queries]
-    end
-
-    GCS --> BigLake
-    AZBlob --> BigLake
-
-    BigLake --> BQOmni
-    BQOmni --> FederatedID
-
-    BigLake --> Dataplex
-    Dataplex --> BigQuery
-
-    BQOmni --> BigQuery
+[GCS]              [Azure Blob Storage]
+   |                       |
+   +-------+       +-------+
+           |       |
+       [BigLake External Tables]
+           |
+   +-------+-------+
+   |               |
+[BigQuery Omni]   [Dataplex]
+       |               |
+   [BigQuery]      [Governance & Metadata]
+       |
+[Analytics & BI Tools]
 
 
 ---
