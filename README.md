@@ -6,6 +6,24 @@ Build a scalable multi-cloud analytics solution that enables seamless querying o
 
 ---
 
+---
+
+## Project Story & Workflow
+
+First, we started by creating buckets in Google Cloud Storage (GCS) to hold our raw data files like CSV and ORC formats. Next, we set up a BigQuery dataset to logically organize our tables.
+
+Instead of loading data directly into BigQuery tables, we created BigLake external tables. These external tables don’t physically store data inside BigQuery — they just hold metadata and pointers to the files stored in GCS. This allows us to query data directly in Cloud Storage without copying or duplicating it. Since BigQuery only accesses the metadata, you won’t see data previews inside BigQuery, but queries run on the actual files stored externally.
+
+For the multi-cloud part, we also worked with Azure Blob Storage. We first created an external connection from BigQuery Omni to our Azure Blob Storage account. Then, in BigQuery, we created a dataset located in the Azure region (e.g., azure-eastus2) and created external tables referencing the data files stored in Azure Blob Storage via this connection. Similar to GCS external tables, the data stays physically in Azure; BigQuery just queries it remotely.
+
+To manage data governance and metadata, we used Dataplex. We created a Raw Zone in Dataplex and linked it to our GCS bucket assets. Dataplex then scanned the data, automatically discovered schemas, and allowed us to enforce policies such as data lineage, sensitive data classification, and access controls. Because we did not transform or curate the data in this project, we didn’t create a Curated Zone.
+
+This architecture enables seamless querying and governance of data spread across multiple cloud platforms without data duplication or movement. It showcases how BigLake and BigQuery Omni allow unified multi-cloud analytics, while Dataplex provides centralized governance and metadata management.
+
+---
+
+
+
 ## Architecture Overview
 
     [Google Cloud Storage (GCS)]        [Azure Blob Storage]
