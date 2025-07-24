@@ -8,19 +8,20 @@ Build a scalable multi-cloud analytics solution that enables seamless querying o
 
 ## Architecture Overview
 
-[GCS]              [Azure Blob Storage]
-   |                       |
-   +-------+       +-------+
-           |       |
-       [BigLake External Tables]
-           |
-   +-------+-------+
-   |               |
-[BigQuery Omni]   [Dataplex]
-       |               |
-   [BigQuery]      [Governance & Metadata]
-       |
-[Analytics & BI Tools]
+    [Google Cloud Storage (GCS)]        [Azure Blob Storage]
+                |                                |
+                +---------------+----------------+
+                                |
+                    [BigLake External Tables]
+                                |
+                +---------------+----------------+
+                |                                |
+        [BigQuery Omni]                     [Dataplex]
+                |                                |
+         [BigQuery SQL]                  [Governance & Metadata]
+                |
+      [Analytics & BI Tools (Looker, Data Studio, etc.)]
+
 
 
 ---
